@@ -10,6 +10,13 @@ app.config["DEBUG"] = True
 
 header = "<html><head></head><body>\n"
 footer = "</body></head>\n"
+filelist = [
+        "cachedInlineTables.js",
+        "final_book.xls",
+        "final_book_es.csv",
+        "final_book.csv",
+        "final_book_es.xls"
+    ]
 
 def make_page(body):
     return header+body+footer
@@ -19,23 +26,19 @@ def make_page(body):
 def home():
     requested_file = request.args.get('file')
     if requested_file:
-        print("downloading", requested_file)
-        return send_from_directory('.',
+        if requested_file in filelist:
+            return send_from_directory('.',
                                requested_file, as_attachment=True)
+        else:
+            body = "<h1>You are not allowed to download "+requested_file+"<h1>"
+            return make_page(body)
 
     with open('index.htm', 'r') as file:
         body = file.read()
     body += "<ul>"
-    for name in [
-        "cachedInlineTables.js",
-        "final_book.xls",
-        "final_book_es.csv",
-        "final_book.csv",
-        "final_book_es.xls"
-    ]:
+    for name in filelist:
         if os.path.isfile(name):
             ctime = time.ctime(os.path.getctime(name))
-            # body += '<li><a href="'+name+'">'+name+'</a> created '+ctime+'</li>'
             body += '<li><a href=/?file='+name+'>'+name+'</a> created '+ctime+'</li>'
         else:
             body += "<li>"+name+" doesn't exist</li>"
