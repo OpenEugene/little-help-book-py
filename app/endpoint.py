@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from flask import Flask,redirect,request,send_from_directory
 import os.path
 from os import path
@@ -7,6 +7,8 @@ import time
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+data_dir = '../data/'
+# data_dir = './'
 
 header = "<html><head></head><body>\n"
 footer = "</body></head>\n"
@@ -27,18 +29,19 @@ def home():
     requested_file = request.args.get('file')
     if requested_file:
         if requested_file in filelist:
-            return send_from_directory('.',
+            return send_from_directory(data_dir,
                                requested_file, as_attachment=True)
         else:
             body = "<h1>You are not allowed to download "+requested_file+"<h1>"
             return make_page(body)
 
-    with open('index.htm', 'r') as file:
+    with open('button_htm.txt', 'r') as file:
         body = file.read()
     body += "<ul>"
     for name in filelist:
-        if os.path.isfile(name):
-            ctime = time.ctime(os.path.getctime(name))
+        full_name = data_dir + name
+        if os.path.isfile(full_name):
+            ctime = time.ctime(os.path.getctime(full_name))
             body += '<li><a href=/?file='+name+'>'+name+'</a> created '+ctime+'</li>'
         else:
             body += "<li>"+name+" doesn't exist</li>"
@@ -48,7 +51,10 @@ def home():
 @app.route('/index.htm', methods=['POST'])
 @app.route('/', methods=['POST'])
 def submit():
-    subprocess.run('./get_table.py')
+    print('before')
+    subprocess.run(['./get_table.py', data_dir])
+    # subprocess.run('./get_table.py')
+    print('after')
     return redirect("/")
 
-app.run()
+app.run(host='0.0.0.0')

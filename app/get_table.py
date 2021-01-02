@@ -1,9 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import csv
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 import requests
-HEADERS = {'Authorization' : 'Bearer key1agtUnabRLb2LS'}
+import sys
+
+HEADERS = {'Authorization' : 'Bearer key1agtUnabRLb2LS', 'accept' : 'text/plain'}
 BASE_URL = 'https://api.airtable.com/v0/appj3UWymNh6FgtGR/'
 VIEW = 'view=Grid%20view'
 
@@ -60,6 +62,16 @@ CITY_TABLE_NAME = 'Cities'
 CITY_TABLE_VAR = 'cityTableCached'
 CITY_TABLE_MAP = {
       'name' : 'Name',
+}
+
+ALERT_TABLE_NAME = 'Alerts'
+ALERT_TABLE_VAR = 'alertTableCached'
+ALERT_TABLE_MAP = {
+    'title' : 'Title',
+    'displayDate' : 'Display Date',
+    'startDate' : 'StartDate',
+    'endDate' : 'EndDate',
+    'note' : 'Notes',
 }
 
 # Make a record in our desired output format
@@ -138,7 +150,7 @@ def do_table(table_name, mapping, var_name, f):
     # Write it into the javascript file
     print('const', var_name, '=', table, ';', file=f)
 
-def do_mailmerge(place_table, category_table, catsubcat_table, language_str):
+def do_mailmerge(dir, place_table, category_table, catsubcat_table, language_str):
     mailmerge_table = []
     for record in place_table:
         catsubcats = record['catSubcatId']
@@ -170,7 +182,7 @@ def do_mailmerge(place_table, category_table, catsubcat_table, language_str):
 
     # Save as csv file
     csv_columns = list(mailmerge_table[0].keys())
-    filename = 'final_book'+language_str
+    filename = dir+'final_book'+language_str
     csv_file = filename+'.csv'
     xls_file = filename+'.xls'
     try:
@@ -197,16 +209,22 @@ def do_mailmerge(place_table, category_table, catsubcat_table, language_str):
 
     wb.save(filename = xls_file)
 
+dir = './'
+if len(sys.argv) > 1:
+    dir = sys.argv[1]
+    if dir[-1] != '/':
+        dir += '/'
 # Process each table
-f = open('cachedInlineTables.js', 'w')
-#do_table(PLACE_TABLE_NAME, PLACE_TABLE_MAP, PLACE_TABLE_VAR, f)
-#do_table(CATEGORY_TABLE_NAME, CATEGORY_TABLE_MAP, CATEGORY_TABLE_VAR, f)
-#do_table(SUBCATEGORY_TABLE_NAME, SUBCATEGORY_TABLE_MAP, SUBCATEGORY_TABLE_VAR, f)
-#do_table(CATSUBCAT_TABLE_NAME, CATSUBCAT_TABLE_MAP, CATSUBCAT_TABLE_VAR, f)
-#do_table(CITY_TABLE_NAME, CITY_TABLE_MAP, CITY_TABLE_VAR, f)
+f = open(dir+'cachedInlineTables.js', 'w')
+do_table(PLACE_TABLE_NAME, PLACE_TABLE_MAP, PLACE_TABLE_VAR, f)
+do_table(CATEGORY_TABLE_NAME, CATEGORY_TABLE_MAP, CATEGORY_TABLE_VAR, f)
+do_table(SUBCATEGORY_TABLE_NAME, SUBCATEGORY_TABLE_MAP, SUBCATEGORY_TABLE_VAR, f)
+do_table(CATSUBCAT_TABLE_NAME, CATSUBCAT_TABLE_MAP, CATSUBCAT_TABLE_VAR, f)
+do_table(CITY_TABLE_NAME, CITY_TABLE_MAP, CITY_TABLE_VAR, f)
+do_table(ALERT_TABLE_NAME, ALERT_TABLE_MAP, ALERT_TABLE_VAR, f)
 
 place_table = get_table(PLACE_TABLE_NAME, PLACE_TABLE_MAP)
 category_table = get_table(CATEGORY_TABLE_NAME, CATEGORY_TABLE_MAP)
 catsubcat_table = get_table(CATSUBCAT_TABLE_NAME, CATSUBCAT_TABLE_MAP)
-do_mailmerge(place_table, category_table, catsubcat_table, '')
-do_mailmerge(place_table, category_table, catsubcat_table, '_es')
+do_mailmerge(dir, place_table, category_table, catsubcat_table, '')
+do_mailmerge(dir, place_table, category_table, catsubcat_table, '_es')
