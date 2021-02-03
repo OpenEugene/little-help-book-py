@@ -9,7 +9,7 @@ The webpage displays a list of the expected files. The ones that exist are prese
 with the date they were generated. For the ones that are not present, it indicates that they don't exist. 
 
 Pressing the `Generate` button runs the `get_table.py` program that generates the above. After pressing the button, you get
-feedback as the above list of files is updated. They should all show as exsiting, with the date reflecting the present time. 
+feedback as the above list of files is updated. They should then all show as exsiting, with the date reflecting the present time. 
 (Otherwise something went wrong, which could be anything from Airtable being down to a bug in the present code.) 
 
 # The code
@@ -19,4 +19,4 @@ feedback as the above list of files is updated. They should all show as exsiting
 
 # todo
 
-Docker it and deploy on MVP. 
+Edit the kubernetes file and deploy on MVP. 
