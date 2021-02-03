@@ -31,6 +31,7 @@ PLACE_TABLE_MAP = {
     'description_es' : 'Description-ES',
     'wheelchair' : 'Wheelchair access (y)',
     'languageHelp' : 'Language Help (y)',
+    'schedule' : 'schedule',
 }
 
 # Values related to the Category table
@@ -72,6 +73,17 @@ ALERT_TABLE_MAP = {
     'startDate' : 'StartDate',
     'endDate' : 'EndDate',
     'note' : 'Notes',
+}
+
+SCHEDULE_TABLE_NAME = 'schedule'
+SCHEDULE_TABLE_VAR = 'scheduleTableCached'
+SCHEDULE_TABLE_MAP = {
+    'byDay' : 'byday',
+    'opensAt' : 'opens_at',
+    'closesAt' : 'closes_at',
+    'byMonthDay' : 'bymonthday',
+    'validFrom' : 'valid_from',
+    'validTo' : 'valid_to',
 }
 
 # Make a record in our desired output format
@@ -222,6 +234,7 @@ do_table(SUBCATEGORY_TABLE_NAME, SUBCATEGORY_TABLE_MAP, SUBCATEGORY_TABLE_VAR, f
 do_table(CATSUBCAT_TABLE_NAME, CATSUBCAT_TABLE_MAP, CATSUBCAT_TABLE_VAR, f)
 do_table(CITY_TABLE_NAME, CITY_TABLE_MAP, CITY_TABLE_VAR, f)
 do_table(ALERT_TABLE_NAME, ALERT_TABLE_MAP, ALERT_TABLE_VAR, f)
+do_table(SCHEDULE_TABLE_NAME, SCHEDULE_TABLE_MAP, SCHEDULE_TABLE_VAR, f)
 
 place_table = get_table(PLACE_TABLE_NAME, PLACE_TABLE_MAP)
 category_table = get_table(CATEGORY_TABLE_NAME, CATEGORY_TABLE_MAP)
