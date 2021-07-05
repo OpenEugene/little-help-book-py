@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
-  namespace: !!!little-help-book
+  name: exporter
+  namespace: little-help-book-stage
   labels:
-    app: web
+    app: exporter
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: web
+      app: exporter
   template:
     metadata:
       labels:
-        app: web
+        app: exporter
     spec:
       containers:
         - name: little-help-book-exporter
@@ -38,11 +38,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
-  namespace: !!!little-help-book
+  name: exporter
+  namespace: little-help-book-stage
 spec:
   selector:
-    app: web
+    app: exporter
   ports:
     - protocol: TCP
       port: 80
